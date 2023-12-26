@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Breadcrumbs from './Breadcrumbs';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import './CalculationsDetailed.css';
 import logoImage from './logo.png'; 
 
 const CalculationsDetailedPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Accessing the bouquet_id from the URL
+  const { id } = useParams<{ id: string }>(); // Accessing the calculation_id from the URL
   const [calculationData, setCalculationtData] = useState({
     calculation_name: '',
     calculation_description: '',
@@ -13,7 +13,7 @@ const CalculationsDetailedPage: React.FC = () => {
   });
 
   const breadcrumbsItems = [
-    { label: 'Все операции', link: '/calculations' },
+    { label: 'Все операции', link: '/operations/' },
     { label: 'Подробнее', link: '' } 
   ];
 
@@ -21,7 +21,7 @@ const CalculationsDetailedPage: React.FC = () => {
   useEffect(() => {
     const fetchCalculationData = async () => {
       try {
-        const response = await fetch(`/operations/${id}`); // Assuming your API endpoint is like 'bouquets/id'
+        const response = await fetch(`http://localhost:8000/api/operations/${id}`); 
         const data = await response.json();
         setCalculationtData(data); // Update state with fetched data
       } catch (error) {
@@ -38,6 +38,13 @@ const CalculationsDetailedPage: React.FC = () => {
   }, [id]); // Dependency array ensures the effect runs whenever 'id' changes
 
   return (
+    <div>
+    <header>
+    <a href="/operations/">
+      <img src={logoImage} alt="Логотип" className="logo" />
+    </a>
+    <h1>Удалённые вычисления</h1>
+  </header>
     <div className="container">
       {
         <div className="row">
@@ -58,6 +65,7 @@ const CalculationsDetailedPage: React.FC = () => {
           </div>
         </div>
       }
+    </div>
     </div>
   );
 };

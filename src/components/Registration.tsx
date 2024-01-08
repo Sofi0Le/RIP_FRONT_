@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAuthToken } from '../redux/authSlice';
-import '../Bouquet.css'; // Предполагается, что это ваш файл CSS
+import '../Calculation.css'; // Предполагается, что это ваш файл CSS
 import axios from 'axios';
 
 const RegistrationPage: React.FC = () => {
@@ -11,7 +11,7 @@ const RegistrationPage: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/users/login/', {
+      const response = await axios.post('http://localhost:8000/api/users/login/', {
         login,
         password,
       });

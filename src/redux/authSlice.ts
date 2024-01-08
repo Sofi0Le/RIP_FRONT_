@@ -17,7 +17,7 @@ const initialState: AuthState = {
 export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
   try {
     // Send a request to the server to log out
-    await axios.get('http://localhost:8000/users/logout/', {
+    await axios.get('http://localhost:8000/api/users/logout/', {
       withCredentials: true,
     });
   } catch (error) {

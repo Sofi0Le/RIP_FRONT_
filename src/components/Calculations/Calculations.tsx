@@ -3,12 +3,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import './Calculations.css';
-import logoImage from './logo.png';
+import logoImage from '../../logo.png';
 import { RootState } from '../../redux/store';
-import LogoutButton from './LogoutButton';
+import LogoutButton from '../../LogoutButton';
 import { setUsername } from '../../redux/authSlice';
-import full_basket from './full_basket.png'
-import empty_basket from './empty_basket.png'
+import full_basket from '../../full_basket.png'
+import empty_basket from '../../empty_basket.png'
 import axios from 'axios';
 
 interface Calculation {
@@ -49,9 +49,16 @@ const CalculationsPage: FC = () => {
 
   const handleAddToCart = async (calculationId: number) => {
     try {
-      await axios.post(`http://localhost:8000/api/operations/${calculationId}/add/`);
+      await axios.post(
+        `http://localhost:8000/api/operations/${calculationId}/add/`,
+        {},
+        {
+          withCredentials: true, // Include credentials in the request
+        }
+      );
       fetchCalculations(searchValue);
     } catch (error) {
+      // Handle error if needed
     }
   };
 

@@ -11,6 +11,7 @@ import full_basket from '../../full_basket.png'
 import empty_basket from '../../empty_basket.png'
 import axios from 'axios';
 
+
 interface Calculation {
   calculation_id: number;
   calculation_name: string;
@@ -34,14 +35,12 @@ const CalculationsPage: FC = () => {
 
   const isUserLoggedIn = document.cookie.includes('session_key');
   const username = useSelector((state: RootState) => state.auth.username);
-  //const role = useSelector((state: RootState) => state.auth.userrole);
 
   const handleLoginClick = () => {
     navigateTo('/login/');
   };
 
   const handleLogoutClick = () => {
-    // Call fetchBouquets when LogoutButton is clicked
     fetchCalculations(searchValue);
   };
 
@@ -49,10 +48,6 @@ const CalculationsPage: FC = () => {
     fetchCalculations(searchValue);
   };
   
-  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Update the searchInput state when the input changes
-    setSearchInput(event.target.value);
-  };
 
   const handleAddToCart = async (calculationId: number) => {
     try {
@@ -139,7 +134,7 @@ const CalculationsPage: FC = () => {
       {isUserLoggedIn && (
         <div className="text-and-button">
              <span
-            className="basket-text" // You can apply a class for styling if needed
+            className="basket-text"
             onClick={() => {
                 navigateTo('/applications/');
               }}

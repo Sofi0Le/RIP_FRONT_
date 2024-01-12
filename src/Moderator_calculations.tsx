@@ -39,6 +39,10 @@ const ModeratorCalculationsPage: FC = () => {
     fetchCalculations(searchValue);
   };
 
+  const breadcrumbsItems = [
+    { label: 'Все операции', link:'' } // Link to the current page
+  ];
+
   const handleSearchClick = () => {
     navigateTo(`http://localhost:8000/api/operations/?title=${searchValue}`);
     fetchCalculations(searchValue);
@@ -137,10 +141,13 @@ const ModeratorCalculationsPage: FC = () => {
       </header>
 
       <div className="album">
+      <div className="container" style={{ marginTop: '20px' }}>
+        <Breadcrumbs items={breadcrumbsItems} />
+      </div>
         <div className="container">
           <div className="row">
             {/* Display bouquets in a table */}
-            <table className="table" style={{ marginTop: '20px' }}>
+            <table className="table" style={{ marginTop: '0px' }}>
               <thead>
                 <tr>
                   <th scope="col">Картинка</th>

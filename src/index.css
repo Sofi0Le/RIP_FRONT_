@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   background-color: rgb(240, 240, 240); 
   margin: 0;
   padding: 0;
@@ -7,13 +7,13 @@ body {
 
 /* Стили для заголовка */
 header {
-  background-color: #c9b09d; /* Более тёмный кремовый цвет */
+  background-color: #85cadf; /* Более тёмный кремовый цвет */
   color: #fff;
   text-align: center;
   padding: 10px;
   display: flex;
   align-items: center;
-  height: 50px; /* Увеличиваем высоту верхней полоски */
+  height: 55px; /* Увеличиваем высоту верхней полоски */
   position: fixed; /* Фиксируем верхнюю полоску */
   top: 0; /* Закрепляем верхнюю полоску наверху */
   left: 0;
@@ -38,12 +38,4 @@ header {
 
 html, body {
   height: 100%;
-}
-
-.footer {
-  position: fixed;
-  top: calc(100vh - 50px);
-  width: 100vw;
-  height: 50px;
-  background-color: #c9b09d;
 }

@@ -8,6 +8,7 @@ import axios from 'axios';
 import LogoutButton from './LogoutButton';
 import { RootState } from './redux/store';
 import { setUserrole, setUsername } from './redux/authSlice';
+import Breadcrumbs from './components/Breadcrumbs/Breadcrumbs';
 
 const formatDate = (dateString: string) => {
     if (!dateString) {
@@ -27,22 +28,18 @@ const formatDate = (dateString: string) => {
     return new Intl.DateTimeFormat('ru', options).format(date);
   };
 
-interface Application {
-  application_id: number;
-  moderator: {
-    login: string;
-  } | null;
-  user: {
-    login: string;
-  } | null;
-  date_application_create: string;
-  date_application_accept: string;
-  date_application_complete: string;
-  input_first_param: number;
-  input_second_param: number;
-  application_status: string;
-  count_empty_results: number;
-}
+  interface Application {
+    application_id: number;
+    moderator_login: string | null;
+    user_login: string | null;
+    date_application_create: string;
+    date_application_accept: string;
+    date_application_complete: string;
+    input_first_param: number;
+    input_second_param: number;
+    application_status: string;
+    count_empty_results: number;
+  }
 
 function translateStatus(status: string): string {
     switch (status) {
@@ -82,6 +79,11 @@ const ApplicationsPage: FC = () => {
     navigateTo('/login/');
   };
 
+  const breadcrumbsItems = [
+    { label: 'Все операции', link: role === 'Moderator' ? '/moderator/operations/' : '/operations' },
+    { label: 'Заявки', link: '' } 
+  ];
+
   const [searchValue, setSearchValue] = useState('');
 
   const handleSearchClick = () => {
@@ -114,6 +116,7 @@ const ApplicationsPage: FC = () => {
       try {
         const response = await fetch('/api/user-data'); // Replace with your actual API endpoint
         const userData = await response.json();
+        console.log(userData.role)
         dispatch(setUserrole(userData.role));
       } catch (error) {
       }
@@ -162,12 +165,12 @@ const ApplicationsPage: FC = () => {
     try {
       const response = await axios.get(`http://localhost:8000/api/applications/?status=${statusValue}&start_date=${startValue}&end_date=${endValue}`, { withCredentials: true });
       const data = response.data;
-
+    
       // Filter applications on the frontend based on the searchValue (client login)
       const filteredApplications = data.filter(application =>
-        application.user?.login.toLowerCase().includes(searchValue.toLowerCase())
+        application.user_login?.toLowerCase().includes(searchValue.toLowerCase())
       );
-
+    
       setApplications(filteredApplications);
     } catch (error) {
       console.error('Error fetching applications:', error);
@@ -227,8 +230,11 @@ const ApplicationsPage: FC = () => {
           </div>
         )}
       </header>
+      <div className="container" style={{ marginTop: '20px' }}>
+        <Breadcrumbs items={breadcrumbsItems} />
+      </div>
       {role === 'Moderator' && (
-        <div className="search-bar" style={{ marginTop: '80px' }}>
+        <div className="container search-bar" style={{ marginBottom: '20px' }}>
           <input
             type="text"
             id="search-input"
@@ -262,10 +268,10 @@ const ApplicationsPage: FC = () => {
           </button>
         </div>
       )}
-            <div className="album">
+        <div className="album">
         <div className="container">
           <div className="row">
-            <table className="table" style={{ marginTop: '20px' }}>
+            <table className="table" style={{ marginTop: 'Xpx' }}>
               <thead>
                 <tr>
                   {/* Common columns for both roles */}
@@ -308,31 +314,55 @@ const ApplicationsPage: FC = () => {
                       {/* Role-specific cells */}
                       {role === 'Moderator' && (
                         <>
-                          <td style={{ padding: '8px' }}>{application.moderator?.login || 'Неизвестно'}</td>
-                          <td style={{ padding: '8px' }}>{application.user?.login || 'Неизвестно'}</td>
+                          <td style={{ padding: '8px' }}>{application.moderator_login ?? 'Неизвестно'}</td>
+                          <td style={{ padding: '8px' }}>{application.user_login ?? 'Неизвестно'}</td>
                           <td style={{ padding: '8px' }}>
                             {application.application_status === 'In service' && (
                               <div>
-                                <button onClick={() => handleAccept(application.application_id)} className="btn btn-primary">
-                                  Принять
-                                </button>
-                                <button onClick={() => handleReject(application.application_id)} className="btn btn-primary">
-                                  Отклонить
-                                </button>
+                              <div className="text-and-button">
+                              <span
+                                  className="basket-text" // You can apply a class for styling if needed
+                                  onClick={() => handleAccept(application.application_id)}
+                                >
+                              <p>Принять</p>
+                              </span>
+                              </div>
+                              <div className="text-and-button">
+                              <span
+                                  className="basket-text" // You can apply a class for styling if needed
+                                  onClick={() => handleReject(application.application_id)}
+                                >
+                              <p>Отклонить</p>
+                              </span>
+                              </div>
                               </div>
                             )}
-                            <a href={`/applications/${application.application_id}/`} className="btn btn-primary">
-                              Подробнее
-                            </a>
+                            <div className="text-and-button">
+                      <span
+                        className="basket-text" // You can apply a class for styling if needed
+                        onClick={() => {
+                        navigateTo(`/applications/${application.application_id}/`);
+              }}
+            >
+            <p>Подробнее</p>
+            </span>
+          </div>
                           </td>
                         </>
                       )}
                       {role === 'User' && (
                         <>
                         <td style={{ padding: '8px' }}>
-                            <a href={`/applications/${application.application_id}/`} className="btn btn-primary">
-                              Подробнее
-                            </a>
+                        <div className="text-and-button">
+                      <span
+                        className="basket-text" // You can apply a class for styling if needed
+                        onClick={() => {
+                        navigateTo(`/applications/${application.application_id}/`);
+              }}
+            >
+            <p>Подробнее</p>
+            </span>
+          </div>
                           </td>
                         </>
                       )}

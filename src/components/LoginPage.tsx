@@ -32,6 +32,8 @@ const LoginPage: React.FC = () => {
       const response = await axios.post('http://localhost:8000/api/users/login/', {
         login,
         password,
+      }, {
+        withCredentials: true,
       });
 
       const sessionKey = response.data.session_key;

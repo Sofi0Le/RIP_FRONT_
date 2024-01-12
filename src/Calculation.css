@@ -3,13 +3,13 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    padding: 20px;
     margin-top: 40px; /* Добавляем отступ сверху, чтобы контейнер не перекрывал верхнюю полоску */
     min-height: calc(100% - 107px); /* Subtract the header and footer heights */
 }
 
+
 body.scrolled header {
-    background-color: rgba(17, 155, 5, 1); /* Цвет фона при прокрутке вниз */
+  background-color: rgba(240, 240, 230, 1); /* Цвет фона при прокрутке вниз */
 }
 
 .search-bar {
@@ -28,43 +28,32 @@ body.scrolled header {
     border-radius: 5px;
     margin-right: 10px;
   }
-  
-  #price-input{
-    width: 70px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-right: 10px;
-  }
 
 #search-button {
-    background-color: #a1836d;
-    color: #fff;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  background-color: #6da183;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 #search-button:hover {
-    background-color: #8c6c57; /* Изменение цвета кнопки при наведении */
+  background-color: #2d6645; /* Изменение цвета кнопки при наведении */
 }  
-
 /* Стили для карточки */
 .card {
-  display: flex;
+  display: flex; /* Используем Flexbox */
   background-color: rgb(255, 255, 255);
   border: 1px solid #ddd;
   border-radius: 10px;
   margin: 10px;
   max-width: 1150px;
-  flex: 1;
+  flex: 1; /* Распределение карточек по ширине */
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
-  min-width: 300px; /* Установите минимальную ширину для карточек */
+  transition: transform 0.2s ease-in-out; /* Анимация увеличения */
 }
 
 
@@ -125,14 +114,14 @@ body.scrolled header {
 
 /* Для кнопки с классом .btn-primary */
 .btn-primary {
-    background-color: #a1836d; /* Более тёмный оттенок кремового цвета */
+    background-color: #4e96da; /* Более тёмный оттенок кремового цвета */
     color: #fff;
     width: 190px;
     height: 40px;
 }
 
 .btn-second {
-  background-color: #8a8581; /* Более тёмный оттенок кремового цвета */
+  background-color: #4e96da; /* Более тёмный оттенок кремового цвета */
   color: #fff;
   width: 190px;
   height: 40px;
@@ -140,14 +129,17 @@ body.scrolled header {
 
 /* Для кнопки с классом .btn-success */
 .btn-success {
-    background-color: #a1836d; /* Более тёмный оттенок кремового цвета */
-    color: #fff;
+  background-color: #4e96da; /* Более тёмный оттенок кремового цвета */
+  color: #fff;
 }
 
 /* Изменение цвета кнопок при наведении */
 .btn-primary:hover,
-.btn-success:hover {
-    background-color: #8c6c57; /* Ещё более тёмный цвет при наведении */
+.btn-success:hover 
+.btn-second:hover
+.btn-add:hover{
+  background-color: #174a79; /* Ещё более тёмный цвет при наведении */
+  transform: scale(1.1); /* Ещё более тёмный цвет при наведении */
 }
 
 .close-button {
@@ -161,12 +153,15 @@ body.scrolled header {
 }
 
 .btn-add {
-  background-color: #a1836d; /* Более тёмный оттенок кремового цвета */
+  background-color: #4e96da; /* Более тёмный оттенок кремового цвета */
   color: #fff;
   width: 300px;
   height: 60px;
 }
 
+.container-new {
+  margin-top: 40px;
+}
 
 .card {
 position: relative;
@@ -179,8 +174,7 @@ color: red; /* Цвет кнопки при наведении */
 
 .breadcrumbs {
 font-size: 16px;
-color: #555; /* Text color for breadcrumbs */
-margin-bottom: 20px; /* Add margin at the bottom */
+color: #555; /* Text color for breadcrumbs */ /* Add margin at the bottom */
 margin-top: 20px;
 }
 
@@ -238,7 +232,7 @@ position: fixed;
 top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
-background-color: #f44336;
+background-color: #e0685f;
 color: white;
 padding: 20px;
 border-radius: 5px;
@@ -285,46 +279,48 @@ height: 50px; /* Adjust the height as needed */
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: rgb(240, 240, 240); 
-    margin: 0;
-    padding: 0;
-  }
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  background-color: rgb(240, 240, 240); 
+  margin: 0;
+  padding: 0;
+}
+
+/* Стили для заголовка */
+header {
+  background-color: #85cadf; /* Более тёмный кремовый цвет */
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  height: 55px; /* Увеличиваем высоту верхней полоски */
+  position: fixed; /* Фиксируем верхнюю полоску */
+  top: 0; /* Закрепляем верхнюю полоску наверху */
+  left: 0;
+  right: 0;
+  z-index: 999; /* Устанавливаем высший z-index, чтобы верхняя полоска была поверх других элементов */
+  transition: background-color 0.3s; /* Добавляем плавное изменение цвета фона */
+}
+
+
+.logo {
+  width: 100px; /* Устанавливаем ширину логотипа в 10 пикселей */
+  height: 60px; /* Устанавливаем высоту логотипа в 10 пикселей */
+  margin-left: 10px; /* Добавляем отступ слева от логотипа */
+  margin-right: 20px;
+}
+
+.header-title {
+  flex-grow: 1; /* Расширяем контейнер с текстом, чтобы он занимал доступное пространство */
+  text-align: right; /* Выравниваем текст справа */
+  margin-right: 10px; /* Добавляем отступ справа от текста */
+}
+
+html, body {
+  height: 100%;
+}
   
-  /* Стили для заголовка */
-  header {
-    background-color: #c9b09d; /* Более тёмный кремовый цвет */
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    height: 50px; /* Увеличиваем высоту верхней полоски */
-    position: fixed; /* Фиксируем верхнюю полоску */
-    top: 0; /* Закрепляем верхнюю полоску наверху */
-    left: 0;
-    right: 0;
-    z-index: 999; /* Устанавливаем высший z-index, чтобы верхняя полоска была поверх других элементов */
-    transition: background-color 0.3s; /* Добавляем плавное изменение цвета фона */
-  }
-  
-  
-  .logo {
-    width: 100px; /* Устанавливаем ширину логотипа в 10 пикселей */
-    height: 60px; /* Устанавливаем высоту логотипа в 10 пикселей */
-    margin-left: 10px; /* Добавляем отступ слева от логотипа */
-    margin-right: 20px;
-  }
-  
-  .header-title {
-    flex-grow: 1; /* Расширяем контейнер с текстом, чтобы он занимал доступное пространство */
-    text-align: right; /* Выравниваем текст справа */
-    margin-right: 10px; /* Добавляем отступ справа от текста */
-  }
-  
-  html, body {
-    height: 100%;
-  }
+ 
   
   .footer {
     position: fixed;

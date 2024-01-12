@@ -1,4 +1,11 @@
 /* Add this to your stylesheet */
+.container.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .table {
   width: 100%;
   max-width: 100%;

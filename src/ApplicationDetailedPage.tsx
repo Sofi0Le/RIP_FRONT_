@@ -228,7 +228,7 @@ const ApplicationDetailPage: React.FC = () => {
                     <h5 className="card-title">{detail.calculation_name}</h5>
                     <p className="card-text">Название операции: {detail.calculation_name}</p>
                     <p className="card-text">Описание: {detail.calculation_description || 'Информация уточняется'}</p>
-                    <p className="card-text">Результат вычисления: {detail.result || ''}</p>
+                    <p className="card-text">Результат вычисления: {detail.result === -1 ? 'Ошибка расчёта' : detail.result || ''}</p>
 
                     {orderData.application.application_status === 'Inserted' && (
                         <div>

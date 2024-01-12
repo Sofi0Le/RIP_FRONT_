@@ -1,8 +1,8 @@
 import React, { FC, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-//import Breadcrumbs from './components/Breadcrumbs/Breadcrumbs';
-import './components/Calculations/Calculations.css';
+import Breadcrumbs from './components/Breadcrumbs/Breadcrumbs';
+import './Calculation.css';
 import logoImage from './logo.png';
 import LogoutButton from './LogoutButton';
 import { RootState } from './redux/store';
@@ -10,14 +10,14 @@ import { setUsername } from './redux/authSlice';
 import axios from 'axios';
 
 interface Calculation {
-    calculation_id: number;
-    calculation_name: string;
-    calculation_description: string;
-    full_url: string;
-    calculation_status: string;
-  }
+  calculation_id: number;
+  calculation_name: string;
+  calculation_description: string;
+  full_url: string;
+  calculation_status: string;
+}
 
-const ModeratorOperationsPage: FC = () => {
+const ModeratorCalculationsPage: FC = () => {
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
   const location = useLocation();
@@ -46,7 +46,11 @@ const ModeratorOperationsPage: FC = () => {
 
   const handleDelete = async (calculationId: number) => {
     try {
-      await axios.delete(`http://localhost:8000/api/operations/${calculationId}/delete/`);
+      await axios(`http://localhost:8000/api/operations/${calculationId}/delete/`,
+      {
+        method: 'DELETE',
+        withCredentials: true
+      });
       fetchCalculations(searchValue);
     } catch (error) {
       console.error('Error deleting calculation:', error);
@@ -55,22 +59,27 @@ const ModeratorOperationsPage: FC = () => {
 
   const handleRestore = async (calculationId: number) => {
     try {
-      await axios.put(`http://localhost:8000/api/operations/${calculationId}/edit/`, { calculation_status: 'Active' });
+      await axios.put(`http://localhost:8000/api/operations/${calculationId}/edit/`, {
+        calculation_status: 'Active'
+      }, {
+        withCredentials: true // Include credentials in the request
+      });
       fetchCalculations(searchValue);
     } catch (error) {
-      console.error('Error restoring bouquet:', error);
+      console.error('Error restoring calculation:', error);
     }
+    
   };
 
   const fetchCalculations = async (searchText: string) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/operations/?title=${searchText}`, {
+      const response = await axios.get(`http://localhost:8000/api/operations/?title=${searchText}&status=all`, {
         withCredentials: true,
       });
       const data = response.data;
-      setCalculations(data.calculations); //??????
-      const insertedApplicationId = data.inserted_application_id;
-      const newHeaderMessage = insertedApplicationId === null ? 'null' : 'не null';
+      setCalculations(data.calculations);
+      const draftApplicationId = data.inserted_application_id;
+      const newHeaderMessage = draftApplicationId === null ? 'null' : 'не null';
       setHeaderMessage(newHeaderMessage);
     } catch (error) {
       console.error('Error fetching calculations:', error);
@@ -113,6 +122,14 @@ const ModeratorOperationsPage: FC = () => {
         )}
         {isUserLoggedIn && (
           <div className="text-and-button">
+             <span
+            className="basket-text" // You can apply a class for styling if needed
+            onClick={() => {
+                navigateTo('/applications/');
+              }}
+            >
+            <p>Заявки</p>
+            </span>
             <p>{username}</p>
             <LogoutButton onLogout={handleLogoutClick} />
           </div>
@@ -123,7 +140,7 @@ const ModeratorOperationsPage: FC = () => {
         <div className="container">
           <div className="row">
             {/* Display bouquets in a table */}
-            <table className="table">
+            <table className="table" style={{ marginTop: '20px' }}>
               <thead>
                 <tr>
                   <th scope="col">Картинка</th>
@@ -135,10 +152,10 @@ const ModeratorOperationsPage: FC = () => {
               <tbody>
                 {calculations.map((calculation) => (
                   <tr key={calculation.calculation_id}>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    <td style={{  padding: '8px' }}>
                       <img
                         src={
-                            calculation.full_url !== '' && calculation.full_url !== 'http://localhost:9000/images/images/None'
+                          calculation.full_url !== '' && calculation.full_url !== 'http://localhost:9000/pictures/None'
                             ? calculation.full_url
                             : logoImage
                         }
@@ -146,31 +163,38 @@ const ModeratorOperationsPage: FC = () => {
                         style={{ width: '100px', height: '100px' }}
                       />
                     </td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{calculation.calculation_name}</td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    <td style={{  padding: '8px' }}>{calculation.calculation_name}</td>
+                    <td style={{ padding: '8px' }}>
                       {calculation.calculation_status === 'Active' ? 'Доступно' : 'Удалёно'}
                     </td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                      {calculation.calculation_status === 'in_stock' ? (
+                    <td style={{ padding: '8px' }}>
+                      {calculation.calculation_status === 'Active' ? (
                           <button onClick={() => handleDelete(calculation.calculation_id)} className="btn btn-primary">
                             Удалить
                           </button>
                       ) : (
                         <button onClick={() => handleRestore(calculation.calculation_id)} className="btn btn-primary">
-                          Сделать доступным
+                          Активировать
                         </button>
                       )}
-                      <a href={`/moderator/operations/change/${calculation.calculation_id}/`} className="btn btn-primary">
-                        Редактировать
-                      </a>
+                     {calculation.calculation_status === 'Active' && (
+                        <a href={`/moderator/operations/change/${calculation.calculation_id}/`} className="btn btn-primary">
+                          Редактировать
+                        </a>
+                      )}
+                      {calculation.calculation_status !== 'Active' && (
+                        <a className="btn btn-second">
+                          Редактировать
+                        </a>
+                      )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <div className="text-and-button">
-            <button className="btn btn-primary" onClick={() => navigateTo('/moderator/operations/new/')}>
-              Добавить букет
+            <button className="btn btn-add" onClick={() => navigateTo('/moderator/operations/new/')}>
+              Добавить вычислительную операцию
             </button>
           </div>
           </div>
@@ -180,4 +204,4 @@ const ModeratorOperationsPage: FC = () => {
   );
 };
 
-export default ModeratorOperationsPage
+export default ModeratorCalculationsPage

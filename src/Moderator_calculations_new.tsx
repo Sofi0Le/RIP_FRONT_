@@ -1,13 +1,14 @@
-// ModeratorBouquetsChangePage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './Moderator_bouquets_change.css'; // Import the CSS file
+import './Moderator_calculations_change.css'; // Import the CSS file
 import logoImage from './logo.png';
+import axios from 'axios';
+
 
 const ModeratorCalculationsNewPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigateTo = useNavigate();
-  const [calculationData, setBouquetData] = useState({
+  const [calculationData, setCalculationData] = useState({
     calculation_name: '',
     calculation_description: '',
     full_url: '',
@@ -27,7 +28,7 @@ const ModeratorCalculationsNewPage: React.FC = () => {
       try {
         const response = await fetch(`http://localhost:8000/api/operations/${id}/`);
         const data = await response.json();
-        setBouquetData(data);
+        setCalculationData(data);
         setEditedData(data);
       } catch (error) {
         console.error('Error fetching calculation data:', error);
@@ -66,36 +67,36 @@ const ModeratorCalculationsNewPage: React.FC = () => {
       const formData = new FormData();
       formData.append('key', 'photo');
       formData.append('photo', selectedFile as Blob);
-
+    
       // You may want to handle this upload endpoint on your server side
-      const uploadResponse = await fetch('http://localhost:8000/upload_photo/', {
-        method: 'POST',
-        body: formData,
+      const uploadResponse = await axios.post('http://localhost:8000/api/operations/upload_photo/', formData, {
+        withCredentials: true, // Include credentials in the request
       });
-
-      const uploadData = await uploadResponse.json();
-      console.log('Upload Response:', uploadData);
-
-      // Update bouquet data including image_url
+    
+      const uploadData = uploadResponse.data;
+      //console.log('Upload Response:', uploadData);
+    
+      // Update calculation data including image_url
       const updatedDataToSend = {
         ...editedData,
-        image_url: uploadData.photo_url, // Assuming the response includes the photo_url field
+        calculation_image_url: uploadResponse.status === 200 ? uploadResponse.data.photo_url : 'base.png',  // Assuming the response includes the photo_url field
       };
-
-      const response = await fetch(`http://localhost:8000/api/operations/create/`, {
-        method: 'POST',
+    
+      const response = await axios.post(`http://localhost:8000/api/operations/create/`, updatedDataToSend, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedDataToSend),
+        withCredentials: true, // Include credentials in the request
       });
-
-      const updatedData = await response.json();
-      setBouquetData(updatedData);
+    
+      const updatedData = response.data;
+      setCalculationData(updatedData);
       navigateTo('/moderator/operations/')
+      //navigateTo('/operations/');
     } catch (error) {
-      console.error('Error updating calculation data:', error);
+      console.error('Error updating calculations data:', error);
     }
+    
   };
 
   return (
@@ -104,7 +105,7 @@ const ModeratorCalculationsNewPage: React.FC = () => {
         <a href="/operations">
           <img src={logoImage} alt="Логотип" className="logo" />
         </a>
-        <h1>Petal Provisions</h1>
+        <h1>Удалённые вычисления</h1>
       </header>
       <div className="container">
         <div className="row">
@@ -112,7 +113,7 @@ const ModeratorCalculationsNewPage: React.FC = () => {
             <div className="card">
               <img
                 src={
-                    calculationData.full_url !== '' && calculationData.full_url !== 'http://localhost:9000/images/images/None'
+                  calculationData.full_url !== '' && calculationData.full_url !== 'http://localhost:9000/pictures/None'
                     ? calculationData.full_url
                     : logoImage
                 }
@@ -122,26 +123,26 @@ const ModeratorCalculationsNewPage: React.FC = () => {
               <div className="card-body">
                 <form>
                   <div className="mb-3">
-                    <label htmlFor="name" className="form-label">
+                    <label htmlFor="calculation_name" className="form-label">
                       Имя
                     </label>
                     <input
                       type="text"
                       className="form-control form-control-lg"
-                      id="name"
-                      name="name"
+                      id="calculation_name"
+                      name="calculation_name"
                       value={editedData.calculation_name}
                       onChange={handleInputChange}
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="description" className="form-label">
+                    <label htmlFor="calculation_description" className="form-label">
                       Описание
                     </label>
                     <textarea
                       className="form-control form-control-dis"
-                      id="description"
-                      name="description"
+                      id="calculation_description"
+                      name="calculation_description"
                       value={editedData.calculation_description}
                       onChange={handleInputChange}
                     />

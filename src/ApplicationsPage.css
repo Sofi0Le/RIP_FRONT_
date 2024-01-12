@@ -1,0 +1,38 @@
+/* Add this to your stylesheet */
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  border-collapse: collapse;
+  border: 3px solid #3498db; /* Цвет и толщина границы таблицы (синий) */
+  color: #000; /* Цвет текста в ячейках (черный) */
+}
+
+.table th, .table td {
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  border-top: 2px solid #3498db; /* Цвет и толщина границы ячеек (синий) */
+  border-right: 2px solid #3498db;
+}
+
+.table th {
+  color: #000; /* Цвет текста в заголовке (черный) */
+}
+
+.table tr:hover {
+  background-color: #a4c2f4; /* Цвет фона строки при наведении */
+}
+
+.table-divider {
+  height: 2px; /* Толщина горизонтальной линии разделителя (синий) */
+}
+
+#search-input {
+  min-width: 60px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
+}

@@ -1,9 +1,10 @@
 // ModeratorBouquetsChangePage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-//import Breadcrumbs from './Breadcrumbs';
+/*import Breadcrumbs from '.components/Breadcrumbs/Breadcrumbs';*/
 import './Moderator_calculations_change.css'; // Import the CSS file
 import logoImage from './logo.png';
+import axios from 'axios';
 
 const ModeratorCalculationsChangePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +24,7 @@ const ModeratorCalculationsChangePage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /*const breadcrumbsItems = [
-    { label: 'Все букеты', link: '/bouquetss' },
+    { label: 'Все операции ', link: '/operations' },
     { label: 'Подробнее', link: '' },
   ];*/
 
@@ -71,41 +72,34 @@ const ModeratorCalculationsChangePage: React.FC = () => {
       const formData = new FormData();
       formData.append('key', 'photo');
       formData.append('photo', selectedFile as Blob);
-
+    
       // You may want to handle this upload endpoint on your server side
-
-      /*const uploadResponse = await fetch('http://localhost:8000/api/upload_photo/', {
-        method: 'POST',
-        body: formData,
-      });*/
-
-      const uploadResponse = await fetch(`http://localhost:8000/api/operations/${id}/edit_im/`, {
-        method: 'POST',
-        body: formData,
+      const uploadResponse = await axios.post('http://localhost:8000/api/operations/upload_photo/', formData, {
+        withCredentials: true, // Include credentials in the request
       });
-
-      const uploadData = await uploadResponse.json();
+    
+      const uploadData = uploadResponse.data;
       console.log('Upload Response:', uploadData);
-
+    
       // Update bouquet data including image_url
       const updatedDataToSend = {
         ...editedData,
-        image_url: uploadData.photo_url, // Assuming the response includes the photo_url field
+        calculation_image_url: uploadData.photo_url, // Assuming the response includes the photo_url field
       };
-
-      const response = await fetch(`http://localhost:8000/api/operations/${id}/edit/`, {
-        method: 'PUT',
+    
+      const response = await axios.put(`http://localhost:8000/api/operations/${id}/edit/`, updatedDataToSend, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedDataToSend),
+        withCredentials: true, // Include credentials in the request
       });
-
-      const updatedData = await response.json();
+    
+      const updatedData = response.data;
       setCalculationData(updatedData);
     } catch (error) {
-      console.error('Error updating bouquet data:', error);
+      console.error('Error updating calculation data:', error);
     }
+    
   };
 
   return (
@@ -114,7 +108,7 @@ const ModeratorCalculationsChangePage: React.FC = () => {
         <a href="/operations">
           <img src={logoImage} alt="Логотип" className="logo" />
         </a>
-        <h1>Petal Provisions</h1>
+        <h1>Удалённые вычисления</h1>
       </header>
       <div className="container">
         <div className="row">
@@ -122,7 +116,7 @@ const ModeratorCalculationsChangePage: React.FC = () => {
             <div className="card">
               <img
                 src={
-                  calculationData.full_url !== '' && calculationData.full_url !== 'http://localhost:9000/images/images/None'
+                  calculationData.full_url !== '' && calculationData.full_url !== 'http://localhost:9000/pictures/None'
                     ? calculationData.full_url
                     : logoImage
                 }
@@ -132,27 +126,27 @@ const ModeratorCalculationsChangePage: React.FC = () => {
               <div className="card-body">
                 <form>
                   <div className="mb-3">
-                    <label htmlFor="name" className="form-label">
+                    <label htmlFor="calculation_name" className="form-label">
                       Имя
                     </label>
                     <input
                       type="text"
                       className="form-control form-control-lg"
-                      id="name"
-                      name="name"
-                      value={editedData.name}
+                      id="calculation_name"
+                      name="calculation_name"
+                      value={editedData.calculation_name}
                       onChange={handleInputChange}
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="description" className="form-label">
+                    <label htmlFor="calculation_description" className="form-label">
                       Описание
                     </label>
                     <textarea
                       className="form-control form-control-dis"
-                      id="description"
-                      name="description"
-                      value={editedData.description}
+                      id="calculation_description"
+                      name="calculation_description"
+                      value={editedData.calculation_description}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -180,7 +174,7 @@ const ModeratorCalculationsChangePage: React.FC = () => {
                     </div>
                   </div>
                   <button type="button" className="btn btn-primary" onClick={handleSaveChanges}>
-                    Сохранить изменения
+                    Сохранить
                   </button>
                 </form>
               </div>

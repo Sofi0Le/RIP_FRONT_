@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import './CalculationsDetailed.css';
-import logoImage from './logo.png'; 
+import logoImage from '../../logo.png'; 
 
 const CalculationsDetailedPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Accessing the calculation_id from the URL
@@ -13,7 +13,7 @@ const CalculationsDetailedPage: React.FC = () => {
   });
 
   const breadcrumbsItems = [
-    { label: 'Все операции', link: '/operations/' },
+    { label: 'Все операции', link: '/operations' },
     { label: 'Подробнее', link: '' } 
   ];
 
@@ -21,7 +21,7 @@ const CalculationsDetailedPage: React.FC = () => {
   useEffect(() => {
     const fetchCalculationData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/operations/${id}`); 
+        const response = await fetch(`http://localhost:8000/api/operations/${id}/`); 
         const data = await response.json();
         setCalculationtData(data); // Update state with fetched data
       } catch (error) {
@@ -40,7 +40,7 @@ const CalculationsDetailedPage: React.FC = () => {
   return (
     <div>
     <header>
-    <a href="/operations/">
+    <a href="/operations">
       <img src={logoImage} alt="Логотип" className="logo" />
     </a>
     <h1>Удалённые вычисления</h1>
@@ -53,7 +53,7 @@ const CalculationsDetailedPage: React.FC = () => {
             <div className="card">
 
             <img
-                  src={(calculationData.full_url != '' && calculationData.full_url !== 'http://localhost:9000/images/images/None') ? calculationData.full_url : logoImage} // Use bouquet.full_url or default logoImage
+                  src={(calculationData.full_url != '' && calculationData.full_url != 'http://localhost:9000/pictures/None') ? calculationData.full_url : logoImage} // Use bouquet.full_url or default logoImage
                   alt={calculationData.full_url}
                   className="card-img-top"
                 />

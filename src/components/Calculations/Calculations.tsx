@@ -18,6 +18,7 @@ interface Calculation {
   full_url: string;
 }
 
+
 const CalculationsPage: FC = () => {
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
@@ -29,9 +30,11 @@ const CalculationsPage: FC = () => {
   const [calculations, setCalculations] = useState<Calculation[]>([]);
   const [searchValue, setSearchValue] = useState(searchParam);
   const [headerMessage, setHeaderMessage] = useState<string>('');
+  const [headerId, setHeaderId] = useState<string>('');
 
   const isUserLoggedIn = document.cookie.includes('session_key');
   const username = useSelector((state: RootState) => state.auth.username);
+  //const role = useSelector((state: RootState) => state.auth.userrole);
 
   const handleLoginClick = () => {
     navigateTo('/login/');
@@ -43,19 +46,20 @@ const CalculationsPage: FC = () => {
   };
 
   const handleSearchClick = () => {
-    navigateTo(`http://localhost:8000/api/operations/?title=${searchValue}`);
     fetchCalculations(searchValue);
+  };
+  
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Update the searchInput state when the input changes
+    setSearchInput(event.target.value);
   };
 
   const handleAddToCart = async (calculationId: number) => {
     try {
-      await axios.post(
-        `http://localhost:8000/api/operations/${calculationId}/add/`,
-        {},
-        {
-          withCredentials: true, // Include credentials in the request
-        }
-      );
+      await axios(`http://localhost:8000/api/operations/${calculationId}/add/`, {
+        method: 'POST',
+        withCredentials: true
+      })
       fetchCalculations(searchValue);
     } catch (error) {
       // Handle error if needed
@@ -64,17 +68,20 @@ const CalculationsPage: FC = () => {
 
   const fetchCalculations = (searchText: string) => {
     // Fetch bouquet data using the relative path with query parameter
-    fetch(`http://localhost:8000/api/operations/?title=${searchText}`) // op or calc
-      .then(response => response.json())
-      .then(data => {
-      const calculationsData = data.calculations || [];
-      
-      console.log('Calculations fetched:', calculationsData);
-      setCalculations(calculationsData);
-      const insertedApplicationId = data.inserted_application_id;
-      const newHeaderMessage = insertedApplicationId === null ? 'null' : 'не null';
-      setHeaderMessage(newHeaderMessage);
-      
+    axios.get(`http://localhost:8000/api/operations/`, {
+      params: { title: searchText },
+      withCredentials: true, // Include credentials in the request
+    })
+      .then(response => {
+        const calculationsData = response.data.calculations || [];
+        console.log('Calculations fetched:', calculationsData);
+        setCalculations(calculationsData);
+        const insertedApplicationId = response.data.inserted_application_id;
+        console.log(insertedApplicationId);
+        const newHeaderMessage = insertedApplicationId === null ? 'null' : 'не null';
+        const newHeaderId = insertedApplicationId === null ? 0 : insertedApplicationId;
+        setHeaderMessage(newHeaderMessage);
+        setHeaderId(newHeaderId);
       })
       .catch(error => {
         console.error('Error fetching calculations:', error);
@@ -88,16 +95,18 @@ const CalculationsPage: FC = () => {
   useEffect(() => {
     // Fetch data when the component mounts for the first time or when search query changes
     fetchCalculations(searchValue);
-  }, [searchValue]); // was []
+  }, []); // was []
 
   useEffect(() => {
     // Fetch user data when the component mounts
     const fetchUserData = async () => {
       try {
-        const response = await fetch('/api/user-data'); // Replace with your actual API endpoint
-        const userData = await response.json();
-        dispatch(setUsername(userData.username));
+        //const response = await fetch('/api/user-data');
+        //const userData = await response.json();
+        const user = localStorage.getItem('username');
+        dispatch(setUsername(user || '')); // Добавлено || '' для предотвращения присвоения null
       } catch (error) {
+        console.error('Error fetching user data:', error);
       }
     };
 
@@ -111,10 +120,10 @@ const CalculationsPage: FC = () => {
   return (
     <div>
     <header>
-      <a href="/bouquets">
+      <a href="/operations">
         <img src={logoImage} alt="Логотип" className="logo" />
       </a>
-      <h1>Petal Provisions</h1>
+      <h1>Удалённые вычисления</h1>
       {!isUserLoggedIn && (
         <div className="text-and-button">
           <img
@@ -129,10 +138,23 @@ const CalculationsPage: FC = () => {
       )}
       {isUserLoggedIn && (
         <div className="text-and-button">
+             <span
+            className="basket-text" // You can apply a class for styling if needed
+            onClick={() => {
+                navigateTo('/applications/');
+              }}
+            >
+            <p>Заявки</p>
+            </span>
             <img
             src={headerMessage === 'null' ? empty_basket : full_basket}
             alt="Basket Image"
             className="basket-image"
+            onClick={() => {
+              if (headerMessage !== 'null') {
+                navigateTo(`/applications/${headerId}/`);
+              }
+            }}
           />
           <p>{username}</p>
           <LogoutButton onLogout={handleLogoutClick} /> {/* Pass the callback function */}

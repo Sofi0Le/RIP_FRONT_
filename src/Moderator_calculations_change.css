@@ -1,38 +1,37 @@
-/* BouquetDetail.css */
+
 
 .container {
-    margin-top: 20px;
-  }
-  
-  .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .card-img-top {
-    width: 100%;
-    height: auto;
-  }
-  
-  .card-body {
-    padding: 20px;
-  }
-  
-  .form-label {
-    font-weight: bold;
-  }
-  
-  .form-control-lg {
-    width: 100%;
-    height: 40px;
-  }
+  margin-top: 20px;
+}
 
-  .form-control-dis {
-    width: 100%;
-    height: 200px;
-  }
-  
-  /* Add more styles as needed */
-  
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+  width: 100%;
+  height: auto;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-control-lg {
+  width: 100%;
+  height: 40px;
+}
+
+.form-control-dis {
+  width: 100%;
+  height: 200px;
+}
+
+/* Add more styles as needed */

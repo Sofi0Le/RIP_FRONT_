@@ -1,5 +1,5 @@
 .container {
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(240, 240, 230);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -54,27 +54,35 @@ body.scrolled header {
 
 /* Стили для карточки */
 .card {
-    display: flex; /* Используем Flexbox */
-    background-color: rgb(255, 255, 255);
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    margin: 10px;
-    max-width: 1150px;
-    flex: 1; /* Распределение карточек по ширине */
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out; /* Анимация увеличения */
+  display: flex;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin: 10px;
+  max-width: 1150px;
+  flex: 1;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  min-width: 300px; /* Установите минимальную ширину для карточек */
 }
+
 
 .card:hover {
     transform: scale(1.02); /* Увеличиваем карточку при наведении на неё */
 }
 
 .card img {
-    width: 300px;
-    max-width: 100%;
-    height: auto;
-    flex-shrink: 0; /* Запрещаем картинке уменьшаться при недостатке места */
+  margin-left: 10px; /* Добавляем отступ слева от логотипа */
+  margin-right: 10px; 
+  margin-top: 10px; 
+  margin-bottom: 10px;
+  vertical-align: middle;
+  width: auto;
+  max-width: 250px;
+  max-height: 250px;
+  height: auto;
+  flex-shrink: 0; 
 }
 
 .card-body {
@@ -123,6 +131,13 @@ body.scrolled header {
     height: 40px;
 }
 
+.btn-second {
+  background-color: #8a8581; /* Более тёмный оттенок кремового цвета */
+  color: #fff;
+  width: 190px;
+  height: 40px;
+}
+
 /* Для кнопки с классом .btn-success */
 .btn-success {
     background-color: #a1836d; /* Более тёмный оттенок кремового цвета */
@@ -143,6 +158,13 @@ body.scrolled header {
     border: none;
     font-size: 20px;
     cursor: pointer;
+}
+
+.btn-add {
+  background-color: #a1836d; /* Более тёмный оттенок кремового цвета */
+  color: #fff;
+  width: 300px;
+  height: 60px;
 }
 
 
@@ -311,3 +333,33 @@ body {
     height: 50px;
     background-color: #c9b09d;
   }
+
+  /* Add this to your stylesheet */
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  border-collapse: collapse;
+  border: 3px solid #3498db; /* Цвет и толщина границы таблицы (синий) */
+  color: #000; /* Цвет текста в ячейках (черный) */
+}
+
+.table th, .table td {
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  border-top: 2px solid #3498db; /* Цвет и толщина границы ячеек (синий) */
+  border-right: 2px solid #3498db;
+}
+
+.table th {
+  color: #000; /* Цвет текста в заголовке (черный) */
+}
+
+.table tr:hover {
+  background-color: #a4c2f4; /* Цвет фона строки при наведении */
+}
+
+.table-divider {
+  height: 2px; /* Толщина горизонтальной линии разделителя (синий) */
+}

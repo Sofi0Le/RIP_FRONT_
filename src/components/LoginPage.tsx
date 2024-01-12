@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAuthToken, setUsername } from '../redux/authSlice';
+import { setAuthToken, setUsername, setUserrole } from '../redux/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import '../Calculation.css';
 import axios from 'axios';
 import logoImage from '../logo.png'; 
+import Breadcrumbs from './Breadcrumbs/Breadcrumbs';
 
 const LoginPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const navigateTo = useNavigate();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null); // State for error message
+
+  const handleOperationsClick = () => {
+    navigateTo('/operations/');
+  };
+
+  const breadcrumbsItems = [
+    { label: 'Авторизация', link:'' } // Link to the current page
+  ];
 
   const closeError = () => {
     setError(null); // Clear error message
@@ -26,12 +36,18 @@ const LoginPage: React.FC = () => {
 
       const sessionKey = response.data.session_key;
       const username = response.data.username;
+      const role = response.data.role;
       dispatch(setAuthToken(sessionKey));
       dispatch(setUsername(username));
+      dispatch(setUserrole(role));
 
       // Check for status 200 and redirect
       if (response.status === 200) {
-        navigate('/operations/');
+        if (role === "User") {
+            navigate('/operations/');
+        } else {
+          navigate('/moderator/operations/');
+        }
       } else {
         // Handle other status codes
         console.error('Login unsuccessful. Status:', response.status);
@@ -61,7 +77,16 @@ const LoginPage: React.FC = () => {
       <img src={logoImage} alt="Логотип" className="logo" />
     </a>
     <h1>Удалённые вычисления</h1>
+    <div className="text-and-button">
+          <button className="btn btn-primary" onClick={handleOperationsClick}>
+            Операции
+          </button>
+        </div>
   </header>
+  <div className="container">
+      {
+        <div className="row">
+          <Breadcrumbs items={breadcrumbsItems} /> {/* Include Breadcrumbs component */}
     <div className="centered-container">
       <form className="vertical-form">
         <div className="button-container">
@@ -97,6 +122,9 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
       )}
+    </div>
+    </div>
+      }
     </div>
     </div>
   );
